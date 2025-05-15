@@ -13,6 +13,7 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddDbContext<DataContext>(options => options.UseInMemoryDatabase("TestDb"));
+        builder.Services.AddScoped<IRepository, Repository>();
         builder.Services.AddScoped<IHotelBookingSeeder, HotelBookingSeeder>();
 
         builder.Services.AddControllers();

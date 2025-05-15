@@ -17,8 +17,9 @@ public class HotelBookingSeeder(DataContext _context) : IHotelBookingSeeder
             var products = new List<Product>
             {
                 new Product { Name = "Domek maly", NumberOfPeople = 3, NumberOfRooms = 2 },
-                new Product { Name = "Domek sredni", NumberOfPeople = 6, NumberOfRooms = 3 },
-                new Product { Name = "Domek duzy", NumberOfPeople = 9, NumberOfRooms = 5 }
+                new Product { Name = "Domek sredni", NumberOfPeople = 6, NumberOfRooms = 3, IsDeleted = true },
+                new Product { Name = "Domek duzy", NumberOfPeople = 9, NumberOfRooms = 5 },
+                new Product { Name = "Domek u Basisty", NumberOfPeople = 8, NumberOfRooms = 2 }
             };
             _context.Products.AddRange(products);
             await _context.SaveChangesAsync();
