@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HotelBooking.Domain.Exceptions.ProductExceptions;
 using HotelBooking.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,13 +30,13 @@ public class Repository(DataContext context) : IRepository
 
     public async Task<Product> GetProductByIdAsync(int id)
     {
-        return await context.Products.FirstOrDefaultAsync(p => p.Id == id) ?? throw new NotImplementedException();
+        return await context.Products.FirstOrDefaultAsync(p => p.Id == id) ?? throw new ProductNotFoundException();
     }
 
     public async Task<Product> UpdateProductAsync(Product product)
     {
 
-        var exisitingProduct = context.Products.FirstOrDefault(p => p.Id == product.Id) ?? throw new NotImplementedException();
+        var exisitingProduct = context.Products.FirstOrDefault(p => p.Id == product.Id) ?? throw new ProductNotFoundException();
 
         exisitingProduct.Name = product.Name;
         exisitingProduct.NumberOfPeople = product.NumberOfPeople;

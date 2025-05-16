@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using HotelBooking.Domain.Repositories;
 using System.Threading.Tasks;
 using HotelBooking.Domain.Seeders;
+using HotelBooking.Middleware;
 
 namespace HotelBooking;
 
@@ -32,6 +33,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
 
         app.UseAuthorization();
 
