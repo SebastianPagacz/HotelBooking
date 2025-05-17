@@ -16,6 +16,7 @@ public class Program
         builder.Services.AddDbContext<DataContext>(options => options.UseInMemoryDatabase("TestDb"));
         builder.Services.AddScoped<IRepository, Repository>();
         builder.Services.AddScoped<IHotelBookingSeeder, HotelBookingSeeder>();
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(HotelBooking.Application.AssemblyReference).Assembly));
 
         builder.Services.AddControllers();
         

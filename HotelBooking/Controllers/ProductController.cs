@@ -2,12 +2,14 @@
 using HotelBooking.Domain.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using HotelBooking.Application.Queries;
+using MediatR;
 
 namespace HotelBooking.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ProductController(IRepository repository) : ControllerBase
+public class ProductController(IRepository repository, IMediator mediator) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> AddProduct([FromBody] Product product)
@@ -19,7 +21,8 @@ public class ProductController(IRepository repository) : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllProductsAsync()
     {
-        var products = await repository.GetAllProductsAsync();
+        // var products = await repository.GetAllProductsAsync();
+        var products = await mediator.Send(new GetAllProductsQuery());
         return StatusCode(200, products);
     }
 
