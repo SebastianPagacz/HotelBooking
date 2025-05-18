@@ -28,19 +28,14 @@ public class Repository(DataContext context) : IRepository
 
     public async Task<IEnumerable<Product>> GetAllProductsAsync()
     {
-        // If there are no products in the db throw exception
-        if (!context.Products.Any())
-            throw new ProductNotFoundException();
-
         return await context.Products
-            .Where(p => p.IsDeleted == false)
             .ToListAsync();
     }
 
     public async Task<Product> GetProductByIdAsync(int id)
     {
-        // If product does not exist throw exception
-        return await context.Products.FirstOrDefaultAsync(p => p.Id == id) ?? throw new ProductNotFoundException();
+        // Query handles business logic
+        return await context.Products.FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task<Product> UpdateProductAsync(Product product)

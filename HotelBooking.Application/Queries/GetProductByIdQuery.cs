@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MediatR;
-using HotelBooking.Domain.Models;
 using HotelBooking.Domain.DTOs;
+using MediatR;
 
 namespace HotelBooking.Application.Queries;
 
-public record GetAllProductsQuery() : IRequest<IEnumerable<ProductDTO>>;
+public record GetProductByIdQuery : IRequest<ProductDTO>
+{
+    public int Id { get; set; }
+}

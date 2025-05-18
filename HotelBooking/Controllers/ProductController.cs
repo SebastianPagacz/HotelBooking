@@ -21,7 +21,6 @@ public class ProductController(IRepository repository, IMediator mediator) : Con
     [HttpGet]
     public async Task<IActionResult> GetAllProductsAsync()
     {
-        // var products = await repository.GetAllProductsAsync();
         var products = await mediator.Send(new GetAllProductsQuery());
         return StatusCode(200, products);
     }
@@ -29,8 +28,8 @@ public class ProductController(IRepository repository, IMediator mediator) : Con
     [HttpGet("{id}")]
     public async Task<IActionResult> GetProductByIdAsync(int id)
     {
-        var product = await repository.GetProductByIdAsync(id);
-        return StatusCode(200, product);
+        var productDTO = await mediator.Send(new GetProductByIdQuery { Id = id });
+        return StatusCode(200, productDTO);
     }
 
     [HttpPatch]

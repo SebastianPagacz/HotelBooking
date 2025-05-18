@@ -6,18 +6,31 @@ using System.Threading.Tasks;
 using MediatR;
 using HotelBooking.Domain.Models;
 using HotelBooking.Domain.Repositories;
+using HotelBooking.Domain.Exceptions.ProductExceptions;
+using HotelBooking.Domain.DTOs;
 
 namespace HotelBooking.Application.Queries;
 
-public class GetAllProductsHandler : IRequestHandler<GetAllProductsQuery, IEnumerable<Product>>
+public class GetAllProductsHandler(IRepository repository) : IRequestHandler<GetAllProductsQuery, IEnumerable<ProductDTO>>
 {
-    private readonly IRepository _repository;
-    public GetAllProductsHandler(IRepository repository)
+
+    public async Task<IEnumerable<ProductDTO>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
     {
-        _repository = repository;
-    }
-    public async Task<IEnumerable<Product>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
-    {
-        return await _repository.GetAllProductsAsync();
+        var products = await repository.GetAllProductsAsync();
+        
+        if (!products.Any())
+            throw new ProductNotFoundException();
+
+        var availableProducts = products
+            .Where(p => !p.IsDeleted)
+            .Select(p => new ProductDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                NumberOfRooms = p.NumberOfRooms,
+                NumberOfPeople = p.NumberOfPeople
+            });
+
+        return availableProducts;
     }
 }
