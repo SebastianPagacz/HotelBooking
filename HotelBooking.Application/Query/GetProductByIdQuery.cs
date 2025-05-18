@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using HotelBooking.Domain.DTOs;
 using MediatR;
 
-namespace HotelBooking.Application.Queries;
+namespace HotelBooking.Application.Query;
 
 public record GetProductByIdQuery : IRequest<ProductDTO>
 {

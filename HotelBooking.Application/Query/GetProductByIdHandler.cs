@@ -9,7 +9,7 @@ using HotelBooking.Domain.Models;
 using HotelBooking.Domain.Repositories;
 using MediatR;
 
-namespace HotelBooking.Application.Queries;
+namespace HotelBooking.Application.Query;
 
 public class GetProductByIdHandler(IRepository repository) : IRequestHandler<GetProductByIdQuery, ProductDTO>
 {

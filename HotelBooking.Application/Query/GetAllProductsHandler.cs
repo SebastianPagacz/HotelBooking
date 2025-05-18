@@ -9,7 +9,7 @@ using HotelBooking.Domain.Repositories;
 using HotelBooking.Domain.Exceptions.ProductExceptions;
 using HotelBooking.Domain.DTOs;
 
-namespace HotelBooking.Application.Queries;
+namespace HotelBooking.Application.Query;
 
 public class GetAllProductsHandler(IRepository repository) : IRequestHandler<GetAllProductsQuery, IEnumerable<ProductDTO>>
 {

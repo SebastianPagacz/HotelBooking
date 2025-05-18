@@ -7,6 +7,6 @@ using MediatR;
 using HotelBooking.Domain.Models;
 using HotelBooking.Domain.DTOs;
 
-namespace HotelBooking.Application.Queries;
+namespace HotelBooking.Application.Query;
 
 public record GetAllProductsQuery() : IRequest<IEnumerable<ProductDTO>>;

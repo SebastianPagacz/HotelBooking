@@ -40,16 +40,8 @@ public class Repository(DataContext context) : IRepository
 
     public async Task<Product> UpdateProductAsync(Product product)
     {
-        // If product does not exist throw exception
-        var exisitingProduct = context.Products.FirstOrDefault(p => p.Id == product.Id) ?? throw new ProductNotFoundException();
-
-        exisitingProduct.Name = product.Name;
-        exisitingProduct.NumberOfPeople = product.NumberOfPeople;
-        exisitingProduct.NumberOfRooms = product.NumberOfRooms;
-        exisitingProduct.UpdatedAt = DateTime.Now;
-
-        context.Products.Update(exisitingProduct);
+        context.Products.Update(product);
         await context.SaveChangesAsync();
-        return exisitingProduct;
+        return product;
     }
 }

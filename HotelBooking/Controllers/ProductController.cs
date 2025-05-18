@@ -2,8 +2,10 @@
 using HotelBooking.Domain.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using HotelBooking.Application.Queries;
+using HotelBooking.Application.Query;
 using MediatR;
+using HotelBooking.Domain.DTOs;
+using HotelBooking.Application.Command;
 
 namespace HotelBooking.Controllers;
 
@@ -12,10 +14,17 @@ namespace HotelBooking.Controllers;
 public class ProductController(IRepository repository, IMediator mediator) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> AddProduct([FromBody] Product product)
+    public async Task<IActionResult> AddProduct([FromBody] CreateProductDTO product)
     {
-        await repository.AddProductAsync(product);
-        return StatusCode(200, product);
+        var result = await mediator.Send(new AddProductCommand
+        {
+            Name = product.Name,
+            IsDeleted = product.IsDeleted,
+            NumberOfRooms = product.NumberOfRooms,
+            NumberOfPeople = product.NumberOfPeople
+        });
+
+        return StatusCode(200, result);
     }
 
     [HttpGet]
@@ -32,19 +41,29 @@ public class ProductController(IRepository repository, IMediator mediator) : Con
         return StatusCode(200, productDTO);
     }
 
-    [HttpPatch]
-    public async Task<IActionResult> UpdateProductAsync(Product product)
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateProductAsync(int id, [FromBody]CreateProductDTO product)
     {
-        var updatedProduct = await repository.UpdateProductAsync(product);
+        var updatedProduct = await mediator.Send(new UpdateProductCommand
+        {
+            Id = id,
+            Name = product.Name,
+            NumberOfPeople = product.NumberOfPeople,
+            NumberOfRooms = product.NumberOfRooms,
+            IsDeleted = product.IsDeleted
+        });
+
         return StatusCode(200, updatedProduct);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProductAsync(int id)
     {
-        var exisitngProduct = await repository.GetProductByIdAsync(id);
-        exisitngProduct.IsDeleted = true;
-        await repository.UpdateProductAsync(exisitngProduct);
-        return StatusCode(200, exisitngProduct);
+        var productId = mediator.Send(new DeleteProductCommand
+        {
+            Id = id
+        });
+
+        return StatusCode(200, $"Product with id {id} has been deleted");
     }
 }
