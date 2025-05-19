@@ -27,10 +27,10 @@ public class UpdateProductHandler(IRepository repository) : IRequestHandler<Upda
 
         var productDTO = new ProductDTO
         {
-            Id = product.Id,
             Name = product.Name,
             NumberOfPeople = product.NumberOfPeople,
             NumberOfRooms = product.NumberOfRooms,
+            Price = product.Price,
         };
 
         await repository.UpdateProductAsync(product);

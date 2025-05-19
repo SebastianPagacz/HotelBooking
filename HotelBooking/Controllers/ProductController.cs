@@ -11,7 +11,7 @@ namespace HotelBooking.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ProductController(IRepository repository, IMediator mediator) : ControllerBase
+public class ProductController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> AddProduct([FromBody] CreateProductDTO product)
@@ -19,9 +19,10 @@ public class ProductController(IRepository repository, IMediator mediator) : Con
         var result = await mediator.Send(new AddProductCommand
         {
             Name = product.Name,
-            IsDeleted = product.IsDeleted,
+            IsDeleted = false,
             NumberOfRooms = product.NumberOfRooms,
-            NumberOfPeople = product.NumberOfPeople
+            NumberOfPeople = product.NumberOfPeople,
+            Price = product.Price,
         });
 
         return StatusCode(200, result);

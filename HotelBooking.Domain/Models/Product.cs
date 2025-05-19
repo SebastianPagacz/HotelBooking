@@ -11,5 +11,6 @@ public class Product : BaseModel
     public string Name { get; set; } = string.Empty;
     public int NumberOfRooms { get; set; }
     public int NumberOfPeople { get; set; }
+    public decimal Price { get; set; }
     public List<Review> Reviews { get; set; } = new List<Review>();
 }

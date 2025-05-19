@@ -24,7 +24,8 @@ public class AddProductHandler(IRepository repository) : IRequestHandler<AddProd
             NumberOfRooms = request.NumberOfRooms,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
-            IsDeleted = request.IsDeleted
+            IsDeleted = request.IsDeleted,
+            Price = request.Price,
         };
 
         await repository.AddProductAsync(newProduct);
@@ -32,10 +33,10 @@ public class AddProductHandler(IRepository repository) : IRequestHandler<AddProd
         // TODO: add automapper
         var newProductDto = new ProductDTO 
         { 
-            Id = newProduct.Id,
             Name = request.Name, 
             NumberOfPeople = request.NumberOfPeople, 
-            NumberOfRooms = request.NumberOfRooms 
+            NumberOfRooms = request.NumberOfRooms,
+            Price = request.Price,
         };
 
         return newProductDto;

@@ -25,10 +25,10 @@ public class GetAllProductsHandler(IRepository repository) : IRequestHandler<Get
             .Where(p => !p.IsDeleted)
             .Select(p => new ProductDTO
             {
-                Id = p.Id,
                 Name = p.Name,
                 NumberOfRooms = p.NumberOfRooms,
-                NumberOfPeople = p.NumberOfPeople
+                NumberOfPeople = p.NumberOfPeople,
+                Price = p.Price,
             });
 
         return availableProducts;

@@ -12,4 +12,5 @@ public class CreateProductDTO
     public int NumberOfRooms { get; set; }
     public int NumberOfPeople { get; set; }
     public bool IsDeleted { get; set; }
+    public decimal Price { get; set; }
 }

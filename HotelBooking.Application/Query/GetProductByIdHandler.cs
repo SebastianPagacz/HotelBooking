@@ -22,10 +22,10 @@ public class GetProductByIdHandler(IRepository repository) : IRequestHandler<Get
 
         var productDTO = new ProductDTO
         {
-            Id = product.Id,
             Name = product.Name,
             NumberOfPeople = product.NumberOfPeople,
-            NumberOfRooms = product.NumberOfRooms
+            NumberOfRooms = product.NumberOfRooms,
+            Price = product.Price,
         };
 
         return productDTO;
