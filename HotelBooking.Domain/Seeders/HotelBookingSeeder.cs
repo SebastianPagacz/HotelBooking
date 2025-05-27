@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HotelBooking.Domain.Repositories;
 using HotelBooking.Domain.Models;
+using System.Reflection;
 
 namespace HotelBooking.Domain.Seeders;
 
@@ -24,5 +25,20 @@ public class HotelBookingSeeder(DataContext _context) : IHotelBookingSeeder
             _context.Products.AddRange(products);
             await _context.SaveChangesAsync();
         }
+
+        if (!_context.Reviews.Any())
+        {
+            var reviews = new List<Review>
+            {
+                new Review { Title = "Super domek", Description = "Test Test Test", Rating = 5, ProductId = 4 },
+                new Review { Title = "Slaby domek", Description = "Test Test Test", Rating = 1, ProductId = 1 },
+                new Review { Title = "Basista rzadi", Description = "Test Test Test" , Rating = 5, ProductId = 4 },
+                new Review { Title = "Maly domek", Description = "Test", Rating = 3, ProductId = 1 },
+                new Review { Title = "Duzy dom", Description = "Test", Rating = 4, ProductId = 3 },
+            };
+            _context.Reviews.AddRange(reviews);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }
