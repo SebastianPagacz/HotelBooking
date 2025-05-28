@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using HotelBooking.Domain.Exceptions.ProductExceptions;
+using HotelBooking.Domain.Exceptions.ReviewExceptions;
 
 namespace HotelBooking.Middleware;
 
@@ -26,6 +27,12 @@ public class ExceptionHandlingMiddleware
             await context.Response.WriteAsJsonAsync(new {error = ex.Message});
         }
         catch (ProductNotFoundException ex)
+        {
+            _logger.LogWarning(ex, ex.Message);
+            context.Response.StatusCode = 404;
+            await context.Response.WriteAsJsonAsync(new { error = ex.Message });
+        }
+        catch (ReviewNotFoundException ex)
         {
             _logger.LogWarning(ex, ex.Message);
             context.Response.StatusCode = 404;

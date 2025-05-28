@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace HotelBooking.Domain.DTOs;
 
-public class ReviewDTO
+public class CreateReviewDTO
 {
+    public int ProductId { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public int Rating {  get; set; }
+    public int Raiting { get; set; }
 }

@@ -22,7 +22,7 @@ public class GetAllReviewsHandler(IRepository repository) : IRequestHandler<GetA
             {
                 Title = r.Title,
                 Description = r.Description,
-                Raiting = r.Rating,
+                Rating = r.Rating,
             });
 
         return reviewsDto;

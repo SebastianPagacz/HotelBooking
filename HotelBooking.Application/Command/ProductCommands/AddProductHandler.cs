@@ -13,12 +13,9 @@ namespace HotelBooking.Application.Command;
 public class AddProductHandler(IRepository repository) : IRequestHandler<AddProductCommand, ProductDTO>
 {
     public async Task<ProductDTO> Handle(AddProductCommand request, CancellationToken cancellationToken)
-    {
-        var numOfProducts = repository.GetAllProductsAsync().Result.Count() + 1;
-        
+    {   
         var newProduct = new Product
         {
-            Id = numOfProducts,
             Name = request.Name,
             NumberOfPeople = request.NumberOfPeople,
             NumberOfRooms = request.NumberOfRooms,
