@@ -78,4 +78,13 @@ public class Repository(DataContext context) : IRepository
         return review;
     }
     #endregion
+
+    #region ProductReviews
+    public async Task<Product> GetProductWithReviewsAsync(int productId)
+    {
+        return await context.Products
+            .Include(p => p.Reviews)
+            .FirstOrDefaultAsync(p => p.Id == productId);
+    }
+    #endregion
 }

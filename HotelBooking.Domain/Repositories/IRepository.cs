@@ -22,4 +22,8 @@ public interface IRepository
     public Task<Review> GetReviewByIdAsync(int id);
     public Task<Review> UpdateReviewAsync(Review review);
     #endregion
+
+    #region ProductReview
+    public Task<Product> GetProductWithReviewsAsync(int productId);
+    #endregion
 }
