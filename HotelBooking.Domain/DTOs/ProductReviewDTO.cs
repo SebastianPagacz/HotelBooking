@@ -12,6 +12,6 @@ public class ProductReviewDTO
     public int NumberOfRooms { get; set; }
     public int NumberOfPeople { get; set; }
     public decimal Price { get; set; }
-    public float OverallRating { get; set; }
+    public double OverallRating { get; set; }
     public List<ReviewDTO> Reviews { get; set; } = new List<ReviewDTO>();
 }

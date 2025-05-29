@@ -16,10 +16,8 @@ public class GetProductAndReviewsHandler(IRepository repository) : IRequestHandl
     {
         var product = await repository.GetProductWithReviewsAsync(request.ProductId) ?? throw new ProductNotFoundException();
 
-        var allRatings = product.Reviews.Select(r => r.Rating);
-
-        var countRatings = allRatings.Count();
-        var sumRating = allRatings.Sum();
+        // Overall rating calculation
+        double overallRating = Math.Round(product.Reviews.Average(r => r.Rating), 2);
 
         var reviewsMapped = product.Reviews
             .Where(p => !p.IsDeleted)
@@ -36,7 +34,7 @@ public class GetProductAndReviewsHandler(IRepository repository) : IRequestHandl
             NumberOfRooms = product.NumberOfRooms,
             NumberOfPeople = product.NumberOfPeople,
             Price = product.Price,
-            OverallRating = sumRating / countRatings,
+            OverallRating = overallRating,
             Reviews = reviewsMapped.ToList()
         };
 
