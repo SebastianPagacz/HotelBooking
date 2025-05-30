@@ -1,5 +1,7 @@
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using User.Domain.Models.Entities;
 using User.Domain.Repository;
 
 namespace UserService
@@ -12,7 +14,11 @@ namespace UserService
 
             // Add services to the container.
             builder.Services.AddDbContext<DataContext>(options =>
-            options.UseInMemoryDatabase("UserDb"));
+                options.UseInMemoryDatabase("UserDb"));
+            builder.Services.AddScoped<IRepository, Repository>();
+            builder.Services.AddScoped<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
+
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(User.Application.AssemblyReference).Assembly));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
