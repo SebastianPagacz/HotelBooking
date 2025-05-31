@@ -8,6 +8,7 @@ using User.Domain.Models.Entities;
 using User.Domain.Models.Request;
 using User.Domain.Repository;
 using Microsoft.AspNetCore.Identity;
+using User.Domain.Exceptions;
 
 namespace User.Application.Command.UserCommand;
 
@@ -15,6 +16,12 @@ public class RegisterUserHandler(IRepository repository, IPasswordHasher<UserEnt
 {
     public async Task<RegisterDTO> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
+        var existingUsername = repository.GetByUsernameAsync(request.Username);
+        var existingEmail = repository.GetByEmailAsync(request.Email);
+
+        if (existingUsername != null && existingEmail != null)
+            throw new UserAlreadyExistsException();
+
         var user = new UserEntity
         {
             Username = request.Username,

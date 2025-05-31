@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using User.Domain.Models.Entities;
 using User.Domain.Repository;
+using UserService.Middleware;
 
 namespace UserService
 {
@@ -35,6 +36,8 @@ namespace UserService
             }
 
             app.UseHttpsRedirection();
+
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseAuthorization();
 

@@ -1,0 +1,11 @@
+services:
+  userservice:
+    image: ${DOCKER_REGISTRY-}userservice
+    build:
+      context: .
+      dockerfile: UserService/Dockerfile
+  hotelbooking:
+    image: ${DOCKER_REGISTRY-}hotelbooking
+    build:
+      context: .
+      dockerfile: HotelBooking/Dockerfile

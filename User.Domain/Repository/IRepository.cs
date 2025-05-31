@@ -11,4 +11,6 @@ namespace User.Domain.Repository;
 public interface IRepository
 {
     public Task<UserEntity> AddAsync(UserEntity user);
+    public Task<UserEntity> GetByEmailAsync(string email);
+    public Task<UserEntity> GetByUsernameAsync(string username);
 }

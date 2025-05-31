@@ -17,4 +17,14 @@ public class Repository(DataContext context) : IRepository
 
         return user;
     }
+
+    public async Task<UserEntity> GetByEmailAsync(string email)
+    {
+        return await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+    }
+
+    public async Task<UserEntity> GetByUsernameAsync(string username)
+    {
+        return await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+    }
 }
