@@ -16,18 +16,24 @@ public class RegisterUserHandler(IRepository repository, IPasswordHasher<UserEnt
 {
     public async Task<RegisterDTO> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        var existingUsername = repository.GetByUsernameAsync(request.Username);
-        var existingEmail = repository.GetByEmailAsync(request.Email);
+        var existingUsername = await repository.UsernameExistsAsnyc(request.Username);
+        var existingEmail = await repository.UsernameExistsAsnyc(request.Email);
 
-        if (existingUsername != null && existingEmail != null)
+        if (existingUsername is true || existingEmail is true)
             throw new UserAlreadyExistsException();
+
+        // TODO: Change it
+        var customerRole = await repository.GetRoleByNameAsync("Customer");
+        var roles = new List<Role>();
+        roles.Add(customerRole);
 
         var user = new UserEntity
         {
             Username = request.Username,
             Email = request.Email,
             CreatedAt = DateTime.Now,
-            IsDeleted = false
+            IsDeleted = false,
+            Roles = roles
         };
 
         var hashedPassword = hasher.HashPassword(user, request.Password);

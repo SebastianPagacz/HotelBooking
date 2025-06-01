@@ -10,6 +10,7 @@ namespace User.Domain.Repository;
 
 public class Repository(DataContext context) : IRepository
 {
+    #region User
     public async Task<UserEntity> AddAsync(UserEntity user)
     {
         await context.Users.AddAsync(user);
@@ -18,13 +19,26 @@ public class Repository(DataContext context) : IRepository
         return user;
     }
 
-    public async Task<UserEntity> GetByEmailAsync(string email)
+    public async Task<bool> EmailExistsAsnyc(string email)
     {
-        return await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        return await context.Users.AnyAsync(u => u.Email == email);
+    }
+
+    public async Task<bool> UsernameExistsAsnyc(string username)
+    {
+        return await context.Users.AnyAsync(u => u.Username == username);
     }
 
     public async Task<UserEntity> GetByUsernameAsync(string username)
     {
         return await context.Users.FirstOrDefaultAsync(u => u.Username == username);
     }
+    #endregion
+
+    #region Role
+    public async Task<Role> GetRoleByNameAsync(string name)
+    {
+        return await context.Roles.FirstOrDefaultAsync(r => r.Name == name);
+    }
+    #endregion
 }

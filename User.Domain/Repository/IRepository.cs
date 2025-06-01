@@ -10,7 +10,14 @@ namespace User.Domain.Repository;
 
 public interface IRepository
 {
+    #region User
     public Task<UserEntity> AddAsync(UserEntity user);
-    public Task<UserEntity> GetByEmailAsync(string email);
+    public Task<bool> EmailExistsAsnyc(string email);
+    public Task<bool> UsernameExistsAsnyc(string username);
     public Task<UserEntity> GetByUsernameAsync(string username);
+    #endregion
+
+    #region Role
+    public Task<Role> GetRoleByNameAsync(string name);
+    #endregion
 }

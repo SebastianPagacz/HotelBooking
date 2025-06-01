@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using User.Application.Command.UserCommand;
+using User.Application.Query;
 using User.Domain.Models.Entities;
 using User.Domain.Models.Request;
 using User.Domain.Repository;
@@ -25,5 +26,17 @@ public class AuthController(IMediator mediator) : ControllerBase
         });
         
         return StatusCode(200, registerDto);
+    }
+
+    [HttpPost("login")]
+    public async Task<ActionResult<string>> Login(User.Domain.Models.Request.LoginRequest request)
+    {
+        string token = await mediator.Send(new LoginUserQuery
+        {
+            Username = request.Username,
+            Password = request.Password
+        });
+
+        return token;
     }
 }

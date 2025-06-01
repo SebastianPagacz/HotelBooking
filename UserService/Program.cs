@@ -4,6 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using User.Domain.Models.Entities;
 using User.Domain.Repository;
 using UserService.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using User.Domain.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using User.Application.Services;
+using User.Domain.Seeders;
 
 namespace UserService
 {
@@ -18,11 +24,38 @@ namespace UserService
                 options.UseInMemoryDatabase("UserDb"));
             builder.Services.AddScoped<IRepository, Repository>();
             builder.Services.AddScoped<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
+            builder.Services.AddScoped<IJWTTokenService, JWTTokenService>();
+            builder.Services.AddScoped<IRoleSeeder, RoleSeeder>();
 
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(User.Application.AssemblyReference).Assembly));
 
+            //JwtConfig
+            var jwtSettings = builder.Configuration.GetSection("Jwt");
+            builder.Services.Configure<JwtSettings>(jwtSettings);
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    var jwtConfig = jwtSettings.Get<JwtSettings>();
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwtConfig.Issuer,
+                        ValidAudience = jwtConfig.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.Key)),
+                    };
+                });
+            builder.Services.AddAuthorization();
+
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -39,10 +72,14 @@ namespace UserService
 
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
-
             app.MapControllers();
+
+            var scope = app.Services.CreateScope();
+            var seeder = scope.ServiceProvider.GetRequiredService<IRoleSeeder>();
+            seeder.SeedAsync();
 
             app.Run();
         }
