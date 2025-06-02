@@ -31,7 +31,7 @@ public class Repository(DataContext context) : IRepository
 
     public async Task<UserEntity> GetByUsernameAsync(string username)
     {
-        return await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+        return await context.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Username == username);
     }
     #endregion
 

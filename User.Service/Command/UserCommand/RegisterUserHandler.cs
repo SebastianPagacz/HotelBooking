@@ -22,7 +22,7 @@ public class RegisterUserHandler(IRepository repository, IPasswordHasher<UserEnt
         if (existingUsername is true || existingEmail is true)
             throw new UserAlreadyExistsException();
 
-        // TODO: Change it
+        // default role for newly registered user
         var customerRole = await repository.GetRoleByNameAsync("Customer");
         var roles = new List<Role>();
         roles.Add(customerRole);

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
@@ -38,5 +39,12 @@ public class AuthController(IMediator mediator) : ControllerBase
         });
 
         return token;
+    }
+
+    [HttpGet]
+    [Authorize(Policy = "AdminOnly")]
+    public IActionResult AdminPage()
+    {
+        return Ok("Dane tylko dla administratora");
     }
 }
