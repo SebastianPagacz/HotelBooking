@@ -1,11 +1,9 @@
-﻿using HotelBooking.Domain.Models;
-using HotelBooking.Domain.Repositories;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using HotelBooking.Application.Command;
 using HotelBooking.Application.Query;
-using MediatR;
 using HotelBooking.Domain.DTOs;
-using HotelBooking.Application.Command;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HotelBooking.Controllers;
 
@@ -14,6 +12,7 @@ namespace HotelBooking.Controllers;
 public class ProductController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
+    [Authorize(Policy = "ForCustomers")]
     public async Task<IActionResult> AddProduct([FromBody] CreateProductDTO product)
     {
         var result = await mediator.Send(new AddProductCommand
