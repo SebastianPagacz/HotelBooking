@@ -9,10 +9,15 @@
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.5.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.16" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HotelBooking.Domain\HotelBooking.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

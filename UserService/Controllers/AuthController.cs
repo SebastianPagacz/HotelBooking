@@ -41,9 +41,23 @@ public class AuthController(IMediator mediator) : ControllerBase
         return token;
     }
 
-    [HttpGet]
+    [HttpGet("admin")]
     [Authorize(Policy = "AdminOnly")]
     public IActionResult AdminPage()
+    {
+        return Ok("Dane tylko dla administratora");
+    }
+
+    [HttpGet("Employee")]
+    [Authorize(Policy = "EmployeeOnly")]
+    public IActionResult AdminPage1()
+    {
+        return Ok("Dane tylko dla administratora");
+    }
+
+    [HttpGet("customer")]
+    [Authorize(Policy = "CustomerOnly")]
+    public IActionResult AdminPage2()
     {
         return Ok("Dane tylko dla administratora");
     }

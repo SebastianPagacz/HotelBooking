@@ -53,8 +53,12 @@ public class Program
         {
             options.AddPolicy("AdminOnly", policy =>
             policy.RequireRole("Admin"));
-            options.AddPolicy("ForCustomers", policy =>
-            policy.RequireRole("Customer"));
+
+            options.AddPolicy("EmployeeOnly", policy =>
+            policy.RequireRole("Admin", "Employee"));
+
+            options.AddPolicy("CustomerOnly", policy =>
+            policy.RequireRole("Admin", "Employee", "Customer"));
         });
 
         builder.Services.AddControllers();

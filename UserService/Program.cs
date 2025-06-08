@@ -11,6 +11,8 @@ using User.Application.Services;
 using User.Domain.Seeders;
 using System.Security.Claims;
 using Microsoft.OpenApi.Models;
+using User.Application.Services.RoleHandling;
+using User.Domain.Enums;
 
 namespace UserService;
 
@@ -60,6 +62,12 @@ public class Program
         {
             options.AddPolicy("AdminOnly", policy =>
             policy.RequireRole("Admin"));
+
+            options.AddPolicy("EmployeeOnly", policy =>
+            policy.RequireRole("Admin", "Employee"));
+
+            options.AddPolicy("CustomerOnly", policy =>
+            policy.RequireRole("Admin", "Employee", "Customer"));
         });
 
         builder.Services.AddControllers();

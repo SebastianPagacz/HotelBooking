@@ -12,7 +12,7 @@ namespace HotelBooking.Controllers;
 public class ProductController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
-    [Authorize(Policy = "ForCustomers")]
+    [Authorize(Policy = "EmployeeOnly")]
     public async Task<IActionResult> AddProduct([FromBody] CreateProductDTO product)
     {
         var result = await mediator.Send(new AddProductCommand
@@ -59,7 +59,7 @@ public class ProductController(IMediator mediator) : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProductAsync(int id)
     {
-        var productId = mediator.Send(new DeleteProductCommand
+        var productId = await mediator.Send(new DeleteProductCommand
         {
             Id = id
         });
