@@ -11,8 +11,6 @@ using User.Application.Services;
 using User.Domain.Seeders;
 using System.Security.Claims;
 using Microsoft.OpenApi.Models;
-using User.Application.Services.RoleHandling;
-using User.Domain.Enums;
 
 namespace UserService;
 
@@ -76,7 +74,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "User Service", Version = "v1" });
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {

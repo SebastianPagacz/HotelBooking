@@ -14,6 +14,7 @@ public interface IRepository
     public Task<IEnumerable<Product>> GetAllProductsAsync();
     public Task<Product> GetProductByIdAsync(int id);
     public Task<Product> UpdateProductAsync(Product product);
+    public Task<Product> GetProductByNameAsync(string name);
     #endregion
 
     #region Review

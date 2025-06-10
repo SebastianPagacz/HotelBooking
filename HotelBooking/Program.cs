@@ -7,6 +7,9 @@ using HotelBooking.Domain.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
+using Microsoft.Extensions.DependencyInjection;
+using HotelBooking.Application.Services;
 
 namespace HotelBooking;
 
@@ -67,7 +70,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Products Service", Version = "v1" });
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
@@ -96,6 +99,14 @@ public class Program
                 }
             });
         });
+
+        builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+        {
+            var config = builder.Configuration.GetSection("ConnectionStrings")["Redis"];
+            return ConnectionMultiplexer.Connect(config);
+        });
+
+        builder.Services.AddScoped<IRedisCacheService, RedisCacheService>();
 
         var app = builder.Build();
 

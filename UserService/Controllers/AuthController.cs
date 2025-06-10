@@ -17,7 +17,7 @@ namespace UserService.Controllers;
 public class AuthController(IMediator mediator) : ControllerBase
 {
     [HttpPost("register")]
-    public async Task<ActionResult<UserEntity>> Register(RegisterDTO request)
+    public async Task<IActionResult> Register(RegisterDTO request)
     {
         var registerDto = await mediator.Send(new RegisterUserCommand
         {
@@ -26,11 +26,11 @@ public class AuthController(IMediator mediator) : ControllerBase
             Password = request.Password
         });
         
-        return StatusCode(200, registerDto);
+        return StatusCode(200, "Succesfully registered!");
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<string>> Login(User.Domain.Models.Request.LoginRequest request)
+    public async Task<IActionResult> Login(User.Domain.Models.Request.LoginRequest request)
     {
         string token = await mediator.Send(new LoginUserQuery
         {
@@ -38,27 +38,6 @@ public class AuthController(IMediator mediator) : ControllerBase
             Password = request.Password
         });
 
-        return token;
-    }
-
-    [HttpGet("admin")]
-    [Authorize(Policy = "AdminOnly")]
-    public IActionResult AdminPage()
-    {
-        return Ok("Dane tylko dla administratora");
-    }
-
-    [HttpGet("Employee")]
-    [Authorize(Policy = "EmployeeOnly")]
-    public IActionResult AdminPage1()
-    {
-        return Ok("Dane tylko dla administratora");
-    }
-
-    [HttpGet("customer")]
-    [Authorize(Policy = "CustomerOnly")]
-    public IActionResult AdminPage2()
-    {
-        return Ok("Dane tylko dla administratora");
+        return StatusCode(200, token);
     }
 }

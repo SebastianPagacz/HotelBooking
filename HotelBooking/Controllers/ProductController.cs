@@ -1,5 +1,6 @@
 ﻿using HotelBooking.Application.Command;
 using HotelBooking.Application.Query;
+using HotelBooking.Application.Services;
 using HotelBooking.Domain.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

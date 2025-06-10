@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HotelBooking.Domain.DTOs;
+using HotelBooking.Domain.Exceptions.ProductExceptions;
 using HotelBooking.Domain.Models;
 using HotelBooking.Domain.Repositories;
 using MediatR;
@@ -13,7 +14,11 @@ namespace HotelBooking.Application.Command;
 public class AddProductHandler(IRepository repository) : IRequestHandler<AddProductCommand, ProductDTO>
 {
     public async Task<ProductDTO> Handle(AddProductCommand request, CancellationToken cancellationToken)
-    {   
+    {
+        var existingProduct = repository.GetProductByNameAsync(request.Name);
+        if (existingProduct != null)
+            throw new ProductAlreadyExistsException();
+
         var newProduct = new Product
         {
             Name = request.Name,

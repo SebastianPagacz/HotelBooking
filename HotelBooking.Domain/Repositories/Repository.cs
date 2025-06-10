@@ -14,11 +14,6 @@ public class Repository(DataContext context) : IRepository
     #region Product
     public async Task<Product> AddProductAsync(Product product)
     {
-        // Checking if product already exisits, if it exists throw exception
-        var exisitingProduct = await context.Products.FirstOrDefaultAsync(p => p.Id == product.Id);
-        if (exisitingProduct != null)
-            throw new ProductAlreadyExistsException();
-
         await context.Products
             .AddAsync(product);
         
@@ -35,7 +30,6 @@ public class Repository(DataContext context) : IRepository
 
     public async Task<Product> GetProductByIdAsync(int id)
     {
-        // Query handles business logic
         return await context.Products.FirstOrDefaultAsync(p => p.Id == id);
     }
 
@@ -44,6 +38,11 @@ public class Repository(DataContext context) : IRepository
         context.Products.Update(product);
         await context.SaveChangesAsync();
         return product;
+    }
+
+    public async Task<Product> GetProductByNameAsync(string name)
+    {
+        return await context.Products.FirstOrDefaultAsync(p => p.Name == name);
     }
     #endregion
 
