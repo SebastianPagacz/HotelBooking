@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HotelBooking.Application.Services;
 using HotelBooking.Domain.DTOs;
 using HotelBooking.Domain.Exceptions.ProductExceptions;
 using HotelBooking.Domain.Models;
@@ -11,11 +7,11 @@ using MediatR;
 
 namespace HotelBooking.Application.Command;
 
-public class AddProductHandler(IRepository repository) : IRequestHandler<AddProductCommand, ProductDTO>
+public class AddProductHandler(IRepository repository, IRedisCacheService cache) : IRequestHandler<AddProductCommand, ProductDTO>
 {
     public async Task<ProductDTO> Handle(AddProductCommand request, CancellationToken cancellationToken)
     {
-        var existingProduct = repository.GetProductByNameAsync(request.Name);
+        var existingProduct = await repository.GetProductByNameAsync(request.Name);
         if (existingProduct != null)
             throw new ProductAlreadyExistsException();
 
@@ -31,6 +27,9 @@ public class AddProductHandler(IRepository repository) : IRequestHandler<AddProd
         };
 
         await repository.AddProductAsync(newProduct);
+
+        var cacheKey = $"product:{newProduct.Id}";
+        await cache.SetAsync(cacheKey, newProduct, TimeSpan.FromMinutes(10)); 
 
         // TODO: add automapper
         var newProductDto = new ProductDTO 

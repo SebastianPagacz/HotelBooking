@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HotelBooking.Application.Services;
 using HotelBooking.Domain.DTOs;
 using HotelBooking.Domain.Exceptions.ProductExceptions;
 using HotelBooking.Domain.Repositories;

@@ -3,25 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HotelBooking.Application.Services;
 using HotelBooking.Domain.Exceptions.ProductExceptions;
 using HotelBooking.Domain.Repositories;
 using MediatR;
 
 namespace HotelBooking.Application.Command;
 
-public class DeleteProductHandler(IRepository repository) : IRequestHandler<DeleteProductCommand, int>
+public class DeleteProductHandler(IRepository repository, IRedisCacheService cache) : IRequestHandler<DeleteProductCommand, int>
 {
     public async Task<int> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        var exsitingProduct = await repository.GetProductByIdAsync(request.Id);
+        var product = await repository.GetProductByIdAsync(request.Id) ?? throw new ProductNotFoundException();
 
-        if (exsitingProduct is null)
-            throw new ProductNotFoundException();
+        product.IsDeleted = true;
 
-        exsitingProduct.IsDeleted = true;
+        await repository.UpdateProductAsync(product);
 
-        await repository.UpdateProductAsync(exsitingProduct);
+        var cacheKey = $"product:{request.Id}";
+        await cache.RemoveAsync(cacheKey);
 
-        return exsitingProduct.Id;
+        return product.Id;
     }
 }
