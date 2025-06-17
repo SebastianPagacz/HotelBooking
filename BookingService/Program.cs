@@ -1,4 +1,5 @@
 using Booking.Domain.Repositories;
+using BookingService.Middleware;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookingService;
@@ -30,6 +31,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
 
         app.UseAuthorization();
 

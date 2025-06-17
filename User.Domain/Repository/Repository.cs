@@ -33,6 +33,11 @@ public class Repository(DataContext context) : IRepository
     {
         return await context.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Username == username);
     }
+
+    public async Task<UserEntity> GetUserByIdAsync(int id)
+    {
+        return await context.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id == id);
+    }
     #endregion
 
     #region Role

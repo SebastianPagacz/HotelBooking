@@ -3,6 +3,7 @@ using Booking.Domain.Models;
 using Booking.Domain.Repositories;
 using Booking.Domain.Enums;
 using MediatR;
+using Booking.Domain.Exceptions;
 
 namespace Booking.Application.Command;
 
@@ -11,6 +12,16 @@ public class AddBookingHandler(IRepository repository) : IRequestHandler<AddBook
     public async Task<BookingDTO> Handle(AddBookingCommand request, CancellationToken cancellationToken)
     {
         var calcPrice = 100;
+
+        // Date validation
+        if (request.StartDate > request.EndDate)
+            throw new DateInvalidException("Start date cannot be greater than end date.");
+
+        if (request.StartDate < DateOnly.FromDateTime(DateTime.Now))
+            throw new DateInvalidException("Start date cannot be from the past.");
+
+        if (request.EndDate < DateOnly.FromDateTime(DateTime.Now))
+            throw new DateInvalidException("End date cannot be from the past.");
 
         var newBooking = new BookingModel
         {
