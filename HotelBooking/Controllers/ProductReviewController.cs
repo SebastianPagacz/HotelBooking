@@ -11,7 +11,7 @@ namespace HotelBooking.Controllers;
 public class ProductReviewController(IMediator mediator) : ControllerBase
 {
     [HttpGet("{id}")]
-    public async Task<ActionResult<ProductReviewDTO>> GetById(int id)
+    public async Task<IActionResult> GetProductReviews(int id)
     {
         var product = await mediator.Send(new GetProductAndReviewsQuery { ProductId = id });
 

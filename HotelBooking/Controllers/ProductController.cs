@@ -29,21 +29,22 @@ public class ProductController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllProductsAsync()
+    public async Task<IActionResult> GetProducts()
     {
         var products = await mediator.Send(new GetAllProductsQuery());
         return StatusCode(200, products);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetProductByIdAsync(int id)
+    public async Task<IActionResult> GetProduct(int id)
     {
         var productDTO = await mediator.Send(new GetProductByIdQuery { Id = id });
         return StatusCode(200, productDTO);
     }
 
     [HttpPatch("{id}")]
-    public async Task<IActionResult> UpdateProductAsync(int id, [FromBody]CreateProductDTO product)
+    [Authorize(Policy = "EmployeeOnly")]
+    public async Task<IActionResult> PatchProduct(int id, [FromBody]CreateProductDTO product)
     {
         var updatedProduct = await mediator.Send(new UpdateProductCommand
         {
@@ -58,7 +59,8 @@ public class ProductController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteProductAsync(int id)
+    [Authorize(Policy = "EmployeeOnly")]
+    public async Task<IActionResult> DeleteProduct(int id)
     {
         var productId = await mediator.Send(new DeleteProductCommand
         {

@@ -1,4 +1,5 @@
 ﻿using HotelBooking.Application.Command;
+using HotelBooking.Application.Command.ReviewCommands;
 using HotelBooking.Application.Query;
 using HotelBooking.Domain.DTOs;
 using HotelBooking.Domain.Models;
@@ -15,15 +16,15 @@ namespace HotelBooking.Controllers;
 public class ReviewController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ReviewDTO>>> GetAsync(int productId)
+    public async Task<IActionResult> GetReviews(int productId)
     {
-        var reviewsDTO = await mediator.Send(new GetAllReviewsQuery { Id = productId });
+        var reviews = await mediator.Send(new GetAllReviewsQuery { Id = productId });
 
-        return StatusCode(200, reviewsDTO);
+        return StatusCode(200, reviews);
     }
     
     [HttpGet("{id}")]
-    public async Task<ActionResult<ReviewDTO>> GetByIdAsync(int id)
+    public async Task<IActionResult> GetReview(int id)
     {
         var review = await mediator.Send(new GetReviewByIdQuery { Id = id });
 
@@ -31,7 +32,7 @@ public class ReviewController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<ReviewDTO>> AddAsync([FromBody] CreateReviewDTO review)
+    public async Task<IActionResult> AddReview([FromBody] CreateReviewDTO review)
     {
         await mediator.Send(new AddReviewCommand 
         { 
@@ -45,10 +46,24 @@ public class ReviewController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult<int>> DeleteAsync(int id)
+    public async Task<IActionResult> DeleteReview(int id)
     {
         await mediator.Send(new DeleteReviewCommand { Id = id });
         
         return StatusCode(200, $"Review with Id {id} has been deleted.");
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutReview(int id, [FromBody] ReviewDTO request)
+    {
+        var review = await mediator.Send(new UpdateReviewCommand 
+        { 
+            Id = id,
+            Title = request.Title,
+            Description = request.Description,
+            Rating = request.Rating
+        });
+
+        return StatusCode(200, review);
     }
 }

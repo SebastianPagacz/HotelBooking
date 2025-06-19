@@ -13,16 +13,16 @@ public class UserController(IMediator mediator) : ControllerBase
 {
     [HttpGet("{id}")]
     [Authorize(Policy = "EmployeeOnly")]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> GetUser(int id)
     {
         var result = await mediator.Send(new GetUserQuery { Id = id });
 
         return StatusCode(200, result);
     }
 
-    [HttpPost("reset-email")]
-    public async Task<IActionResult> ResetPassword(string email)
-    {
+    //[HttpPost("reset-email")]
+    //public async Task<IActionResult> ResetPassword(string email)
+    //{
 
-    }
+    //}
 }
