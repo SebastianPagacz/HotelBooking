@@ -22,6 +22,12 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             context.Response.StatusCode = 406;
             await context.Response.WriteAsJsonAsync(new { error = ex.Message });
         }
+        catch(InvalidCredentialException ex)
+        {
+            logger.LogWarning(ex, ex.Message);
+            context.Response.StatusCode = 400;
+            await context.Response.WriteAsJsonAsync(new { error = ex.Message });
+        }
         catch (Exception ex)
         {
             logger.LogWarning(ex, ex.Message);

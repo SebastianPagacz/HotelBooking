@@ -1,23 +1,22 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using User.Domain.Exceptions;
-using User.Domain.Repository;
+using User.Domain.Models.Entities;
 
 namespace User.Application.Query.UserQueries;
 
-public class ResetPasswordHandler(IRepository repository) : IRequestHandler<ResetPasswordQuery, bool>
+public class ResetPasswordHandler(UserManager<UserEntity> userManager) : IRequestHandler<ResetPasswordQuery, string>
 {
-    public async Task<bool> Handle(ResetPasswordQuery request, CancellationToken cancellationToken)
+    public async Task<string> Handle(ResetPasswordQuery request, CancellationToken cancellationToken)
     {
-        var exisitngEmail = await repository.EmailExistsAsnyc(request.Email);
+        var user = await userManager.FindByEmailAsync(request.Email);
+        if (user == null)
+            return "failed";
 
-        if (exisitngEmail is false)
-            throw new UserNotFoundException();
+        var result = await userManager.ResetPasswordAsync(user, request.Token, request.Password);
+        if (result.Succeeded)
+            return "success";
 
-        throw new NotImplementedException();
+        return "failed";
     }
 }

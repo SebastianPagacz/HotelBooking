@@ -8,6 +8,6 @@ namespace User.Domain.Exceptions;
 
 public class InvalidCredentialException : Exception
 {
-    public InvalidCredentialException() : base("User already exists") { }
-    public InvalidCredentialException(Exception innerException) : base("User already exists", innerException) { }
+    public InvalidCredentialException() : base("Invalid credentials") { }
+    public InvalidCredentialException(Exception innerException) : base("Invalid credentials", innerException) { }
 }
