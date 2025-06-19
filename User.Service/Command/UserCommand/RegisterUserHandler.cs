@@ -12,36 +12,36 @@ using User.Domain.Exceptions;
 
 namespace User.Application.Command.UserCommand;
 
-public class RegisterUserHandler(IRepository repository, IPasswordHasher<UserEntity> hasher) : IRequestHandler<RegisterUserCommand, RegisterDTO>
+public class RegisterUserHandler(UserManager<UserEntity> userManager, RoleManager<Role> roleManager) : IRequestHandler<RegisterUserCommand, RegisterDTO>
 {
     public async Task<RegisterDTO> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        var existingUsername = await repository.UsernameExistsAsnyc(request.Username);
-        var existingEmail = await repository.UsernameExistsAsnyc(request.Email);
-
-        if (existingUsername is true || existingEmail is true)
-            throw new UserAlreadyExistsException();
-
-        // default role for newly registered user
-        var customerRole = await repository.GetRoleByNameAsync("Admin");
-        var roles = new List<Role>();
-        roles.Add(customerRole);
+        var existingUsername = await userManager.FindByNameAsync(request.Username);
+        var existingEmail = await userManager.FindByEmailAsync(request.Email);
 
         var user = new UserEntity
         {
-            Username = request.Username,
+            UserName = request.Username,
             Email = request.Email,
             CreatedAt = DateTime.Now,
             IsDeleted = false,
-            Roles = roles
         };
 
-        var hashedPassword = hasher.HashPassword(user, request.Password);
+        var createResult = await userManager.CreateAsync(user, request.Password);
 
-        user.PasswordHash = hashedPassword;
+        if (!createResult.Succeeded) 
+        {
+            throw new Exception(string.Join("; ", createResult.Errors.Select(e => e.Description)));
+        }
 
-        await repository.AddAsync(user);
+        var roleExists = await roleManager.RoleExistsAsync("Admin");
+        if (!roleExists)
+        {
+            await roleManager.CreateAsync(new Role { Name = "Admin" });
+        }
 
-        return new RegisterDTO { Username = user.Username, Email = user.Email, Password = user.PasswordHash};
+        var addToRoleResault = await userManager.AddToRoleAsync(user, "Admin");
+
+        return new RegisterDTO { Username = user.UserName, Email = user.Email, Password = user.PasswordHash};
     }
 }

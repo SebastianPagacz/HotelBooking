@@ -1,23 +1,24 @@
-﻿using User.Domain.Models.Entities;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using User.Domain.Models.Entities;
 using User.Domain.Repository;
 
 namespace User.Domain.Seeders;
 
-public class RoleSeeder(DataContext context) : IRoleSeeder
+public static class RoleSeeder
 {
-    public async Task SeedAsync()
+    public static async Task SeedAsync(IServiceProvider serviceProvider)
     {
-        if (!context.Roles.Any())
-        {
-            var roles = new List<Role>
-            {
-                new Role { Name = "Admin" },
-                new Role { Name = "Employee" },
-                new Role { Name = "Customer" },
-            };
+        var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
 
-            await context.Roles.AddRangeAsync(roles);
-            await context.SaveChangesAsync();
+        string[] roles = ["Admin", "Employee", "Customer"];
+
+        foreach (var role in roles) 
+        {
+            if (!await roleManager.RoleExistsAsync(role)) 
+            {
+                await roleManager.CreateAsync(new Role { Name = role });
+            }
         }
     }
 }

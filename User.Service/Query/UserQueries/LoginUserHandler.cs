@@ -7,22 +7,22 @@ using User.Domain.Repository;
 
 namespace User.Application.Query;
 
-public class LoginUserHandler(IRepository repository, IPasswordHasher<UserEntity> hasher, IJWTTokenService tokenService) : IRequestHandler<LoginUserQuery, string>
+public class LoginUserHandler(UserManager<UserEntity> userManager, IJWTTokenService tokenService) : IRequestHandler<LoginUserQuery, string>
 {
     public async Task<string> Handle(LoginUserQuery request, CancellationToken cancellationToken)
     {
-        var exisitingUser = await repository.GetByUsernameAsync(request.Username);
+        var existingUser = await userManager.FindByNameAsync(request.Username);
 
-        if (exisitingUser is null || exisitingUser.IsDeleted is true)
+        if (existingUser is null || existingUser.IsDeleted is true)
             throw new InvalidCredentialException();
 
-        if (hasher.VerifyHashedPassword(exisitingUser, exisitingUser.PasswordHash, request.Password)
-            == PasswordVerificationResult.Failed)
+        var isPasswordValid = await userManager.CheckPasswordAsync(existingUser, request.Password);
+        if (!isPasswordValid)
             throw new InvalidCredentialException();
 
-        var roles = exisitingUser.Roles.Select(r => r.Name).ToList();
+        var roles = await userManager.GetRolesAsync(existingUser);
 
-        string token = tokenService.GenerateToken(exisitingUser.Id, roles);
+        string token = tokenService.GenerateToken(existingUser.Id, roles.ToList());
 
         return token;
     }

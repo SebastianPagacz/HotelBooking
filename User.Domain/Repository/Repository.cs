@@ -3,47 +3,49 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using User.Domain.Models.Entities;
 
 namespace User.Domain.Repository;
 
-public class Repository(DataContext context) : IRepository
+public class Repository(UserManager<UserEntity> userManager) : IRepository
 {
     #region User
-    public async Task<UserEntity> AddAsync(UserEntity user)
+    public async Task<UserEntity> AddAsync(UserEntity user, string password)
     {
-        await context.Users.AddAsync(user);
-        await context.SaveChangesAsync();
+        var result = userManager.CreateAsync(user, password);
 
         return user;
     }
 
     public async Task<bool> EmailExistsAsnyc(string email)
     {
-        return await context.Users.AnyAsync(u => u.Email == email);
+        var user = await userManager.FindByEmailAsync(email);
+        
+        return user != null;
     }
 
     public async Task<bool> UsernameExistsAsnyc(string username)
     {
-        return await context.Users.AnyAsync(u => u.Username == username);
+        var user = await userManager.FindByNameAsync(username);
+
+        return user != null;
     }
 
     public async Task<UserEntity> GetByUsernameAsync(string username)
     {
-        return await context.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Username == username);
+        return await userManager.FindByNameAsync(username);
     }
 
     public async Task<UserEntity> GetUserByIdAsync(int id)
     {
-        return await context.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id == id);
+        return await userManager.FindByIdAsync(id.ToString());
     }
-    #endregion
 
-    #region Role
-    public async Task<Role> GetRoleByNameAsync(string name)
+    public async Task<IList<string>> GetRolesAsync(UserEntity user)
     {
-        return await context.Roles.FirstOrDefaultAsync(r => r.Name == name);
+        return await userManager.GetRolesAsync(user);
     }
     #endregion
 }
