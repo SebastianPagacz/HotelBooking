@@ -1,4 +1,5 @@
 ﻿using Booking.Application.Command;
+using Booking.Application.Queries;
 using Booking.Domain.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +11,7 @@ namespace BookingService.Controllers;
 [ApiController]
 public class BookingController(IMediator mediator) : ControllerBase
 {
-    [HttpPost("AddBooking")]
+    [HttpPost("add-booking")]
     public async Task<IActionResult> PostAsync(CreateBookingDTO bookingDto)
     {
         var result = await mediator.Send(new AddBookingCommand
@@ -20,6 +21,13 @@ public class BookingController(IMediator mediator) : ControllerBase
             StartDate = bookingDto.StartDate,
             EndDate = bookingDto.EndDate,
         });
+
+        return StatusCode(200, result);
+    }
+    [HttpGet("get-bookings")]
+    public async Task<IActionResult> GetBookingsAsync()
+    {
+        var result = await mediator.Send(new GetBookingsQuery());
 
         return StatusCode(200, result);
     }

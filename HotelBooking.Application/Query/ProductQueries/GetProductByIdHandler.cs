@@ -1,13 +1,15 @@
-﻿using HotelBooking.Application.Services;
+﻿using HotelBooking.Application.Producer;
+using HotelBooking.Application.Services;
 using HotelBooking.Domain.DTOs;
 using HotelBooking.Domain.Exceptions.ProductExceptions;
 using HotelBooking.Domain.Models;
+using HotelBooking.Domain.Models.EventModels;
 using HotelBooking.Domain.Repositories;
 using MediatR;
 
 namespace HotelBooking.Application.Query;
 
-public class GetProductByIdHandler(IRepository repository, IRedisCacheService cache) : IRequestHandler<GetProductByIdQuery, ProductDTO>
+public class GetProductByIdHandler(IRepository repository, IRedisCacheService cache, IKafkaProducer kafkaProducer) : IRequestHandler<GetProductByIdQuery, ProductDTO>
 {
     public async Task<ProductDTO> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
@@ -24,6 +26,14 @@ public class GetProductByIdHandler(IRepository repository, IRedisCacheService ca
                 NumberOfRooms = cachedProduct.NumberOfRooms,
                 Price = cachedProduct.Price,
             };
+            // refactor needed
+            await kafkaProducer.SendBookingCreatedAsync(new BookingCreatedEvent
+            {
+                Id = request.Id,
+                Name = cachedDto.Name,
+                PricePerNight = cachedDto.Price
+            });
+
             return cachedDto;
         }
 
@@ -41,6 +51,13 @@ public class GetProductByIdHandler(IRepository repository, IRedisCacheService ca
             NumberOfRooms = product.NumberOfRooms,
             Price = product.Price,
         };
+
+        await kafkaProducer.SendBookingCreatedAsync(new BookingCreatedEvent
+        {
+            Id = product.Id,
+            Name = product.Name,
+            PricePerNight = product.Price
+        });
 
         return productDTO;
     }

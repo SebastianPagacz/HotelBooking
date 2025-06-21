@@ -1,4 +1,5 @@
 ﻿using Booking.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Domain.Repositories;
 
@@ -13,9 +14,9 @@ public class Repository(DataContext context) : IRepository
         return booking;
     }
 
-    public Task<IEnumerable<BookingModel>> GetAsync(BookingModel booking)
+    public async Task<IEnumerable<BookingModel>> GetAsync()
     {
-        throw new NotImplementedException();
+        return await context.Bookings.ToListAsync();
     }
 
     public Task<BookingModel> GetByIdAsync(BookingModel booking)

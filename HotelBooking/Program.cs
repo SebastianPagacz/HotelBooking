@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 using Microsoft.Extensions.DependencyInjection;
 using HotelBooking.Application.Services;
+using HotelBooking.Application.Producer;
 
 namespace HotelBooking;
 
@@ -24,6 +25,8 @@ public class Program
         builder.Services.AddScoped<IRepository, Repository>();
         builder.Services.AddScoped<IHotelBookingSeeder, HotelBookingSeeder>();
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(HotelBooking.Application.AssemblyReference).Assembly));
+
+        builder.Services.AddSingleton<IKafkaProducer, KafkaProducer>();
 
         // JwtConfig
         var jwtSettings = builder.Configuration.GetSection("Jwt");
