@@ -1,14 +1,8 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using User.Application.Command.UserCommand;
 using User.Application.Query;
-using User.Domain.Models.Entities;
 using User.Domain.Models.Request;
-using User.Domain.Repository;
 
 namespace UserService.Controllers;
 

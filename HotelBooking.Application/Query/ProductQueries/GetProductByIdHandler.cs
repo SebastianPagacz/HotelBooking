@@ -26,13 +26,6 @@ public class GetProductByIdHandler(IRepository repository, IRedisCacheService ca
                 NumberOfRooms = cachedProduct.NumberOfRooms,
                 Price = cachedProduct.Price,
             };
-            // refactor needed
-            await kafkaProducer.SendBookingCreatedAsync(new BookingCreatedEvent
-            {
-                Id = request.Id,
-                Name = cachedDto.Name,
-                PricePerNight = cachedDto.Price
-            });
 
             return cachedDto;
         }
@@ -51,13 +44,6 @@ public class GetProductByIdHandler(IRepository repository, IRedisCacheService ca
             NumberOfRooms = product.NumberOfRooms,
             Price = product.Price,
         };
-
-        await kafkaProducer.SendBookingCreatedAsync(new BookingCreatedEvent
-        {
-            Id = product.Id,
-            Name = product.Name,
-            PricePerNight = product.Price
-        });
 
         return productDTO;
     }

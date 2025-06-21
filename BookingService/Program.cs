@@ -1,3 +1,4 @@
+using Booking.Application.Services;
 using Booking.Domain.Repositories;
 using BookingService.Middleware;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,8 @@ public class Program
         builder.Services.AddDbContext<DataContext>(options =>
             options.UseInMemoryDatabase("TestBookingDb"));
         builder.Services.AddScoped<IRepository, Repository>();
+        builder.Services.AddHostedService<KafkaConsumer>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Booking.Application.AssemblyReference).Assembly));
 

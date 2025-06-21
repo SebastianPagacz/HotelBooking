@@ -4,15 +4,16 @@ using Booking.Domain.Repositories;
 using Booking.Domain.Enums;
 using MediatR;
 using Booking.Domain.Exceptions;
+using Microsoft.Extensions.Logging;
+using System.Text.Json;
+using Booking.Application.Services;
 
 namespace Booking.Application.Command;
 
-public class AddBookingHandler(IRepository repository) : IRequestHandler<AddBookingCommand, BookingDTO>
+public class AddBookingHandler(IRepository repository, IEmailService emailService) : IRequestHandler<AddBookingCommand, BookingDTO>
 {
     public async Task<BookingDTO> Handle(AddBookingCommand request, CancellationToken cancellationToken)
     {
-        var calcPrice = 100;
-
         // Date validation
         if (request.StartDate > request.EndDate)
             throw new DateInvalidException("Start date cannot be greater than end date.");
@@ -22,6 +23,9 @@ public class AddBookingHandler(IRepository repository) : IRequestHandler<AddBook
 
         if (request.EndDate < DateOnly.FromDateTime(DateTime.Now))
             throw new DateInvalidException("End date cannot be from the past.");
+
+        var datePeriod = (request.EndDate.ToDateTime(TimeOnly.MinValue) - request.StartDate.ToDateTime(TimeOnly.MinValue)).Days;
+        var calcPrice = request.PricePerNight * datePeriod;
 
         var newBooking = new BookingModel
         {
@@ -45,6 +49,9 @@ public class AddBookingHandler(IRepository repository) : IRequestHandler<AddBook
             EndDate = newBooking.EndDate,
             CaluclatedPrice = newBooking.CaluclatedPrice,
         };
+
+        string mailMessage = $"You have a new booking with Id {newBooking.Id} that starts at {newBooking.StartDate}, ends at {newBooking.EndDate} and costs {newBooking.CaluclatedPrice}";
+        emailService.Send("s.pagacz123@gmail.com", "s.pagacz123@gmail.com", "new order", mailMessage);
 
         return bookingDTO;
     }
