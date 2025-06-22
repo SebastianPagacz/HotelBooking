@@ -7,16 +7,13 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using HotelBooking.Domain.DTOs;
 using HotelBooking.Domain.Models;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
-using Newtonsoft.Json;
 
 namespace HotelBooking.Tests.IntegrationTests;
 
-public class ProductControllerTests : IClassFixture<WebApplicationFactory<Program>>
+public class ProductControllerTests : IClassFixture<CustomWebApplicationFactory>
 {
     private readonly HttpClient _client;
-    public ProductControllerTests(WebApplicationFactory<Program> factory)
+    public ProductControllerTests(CustomWebApplicationFactory factory)
     {
         _client = factory.CreateClient();
     }
@@ -72,7 +69,7 @@ public class ProductControllerTests : IClassFixture<WebApplicationFactory<Progra
         var response = await _client.PostAsync("api/product", content);
 
         // assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
 }

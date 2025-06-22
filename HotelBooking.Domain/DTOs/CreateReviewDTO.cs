@@ -12,5 +12,5 @@ public class CreateReviewDTO
     public int ProductId { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public int Raiting { get; set; }
+    public int Rating { get; set; }
 }

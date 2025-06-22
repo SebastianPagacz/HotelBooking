@@ -34,11 +34,11 @@ public class ReviewController(IMediator mediator) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddReview([FromBody] CreateReviewDTO review)
     {
-        await mediator.Send(new AddReviewCommand 
-        { 
-            Titile = review.Title,
+        await mediator.Send(new AddReviewCommand
+        {
+            Title = review.Title,
             Description = review.Description,
-            Rating = review.Raiting,
+            Rating = review.Rating,
             ProductId = review.ProductId,
         });
 

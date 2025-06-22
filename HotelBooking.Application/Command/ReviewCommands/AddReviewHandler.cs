@@ -18,7 +18,7 @@ public class AddReviewHandler(IRepository repository, IRedisCacheService cache) 
         //TODO: validation of reviews
         var review = new Review
         {
-            Title = request.Titile,
+            Title = request.Title,
             Description = request.Description,
             Rating = request.Rating,
             CreatedAt = DateTime.Now,
@@ -33,7 +33,7 @@ public class AddReviewHandler(IRepository repository, IRedisCacheService cache) 
 
         var result = new ReviewDTO
         {
-            Title = request.Titile,
+            Title = request.Title,
             Description = request.Description,
             Rating = request.Rating,
         };

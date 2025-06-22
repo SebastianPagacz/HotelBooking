@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HotelBooking.Application.Command;
+using HotelBooking.Application.Services;
 using HotelBooking.Domain.Models;
 using HotelBooking.Domain.Repositories;
+using System.Threading;
 using Moq;
 
 namespace HotelBooking.Tests.UnitTests;
@@ -17,7 +19,8 @@ public class CQRSTests
     {
         // arrange
         var mockRepo = new Mock<IRepository>();
-        var handler = new AddProductHandler(mockRepo.Object);
+        var mockCache = new Mock<IRedisCacheService>();
+        var handler = new AddProductHandler(mockRepo.Object, mockCache.Object);
         var command = new AddProductCommand
         {
             Name = "test",

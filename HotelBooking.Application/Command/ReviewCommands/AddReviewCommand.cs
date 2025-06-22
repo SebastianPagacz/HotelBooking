@@ -10,7 +10,7 @@ namespace HotelBooking.Application.Command;
 
 public record AddReviewCommand : IRequest<ReviewDTO>
 {
-    public string Titile { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public int Rating { get; set; }
     public int ProductId { get; set; }
