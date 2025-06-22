@@ -21,7 +21,7 @@ public class EmailService : IEmailService
         smtpClient.EnableSsl = true;
         smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
         smtpClient.UseDefaultCredentials = false;
-        smtpClient.Credentials = new System.Net.NetworkCredential("s.pagacz123@gmail.com", "Placeholder password for github 😊");
+        smtpClient.Credentials = new System.Net.NetworkCredential("s.pagacz123@gmail.com", "placeholder");
 
         smtpClient.Send(mailMessage);
     }

@@ -28,6 +28,7 @@ public class BookingHandler(IRepository repository, IRedisCacheService cache, IK
             {
                 Id = cachedProduct.Id,
                 Name = cachedProduct.Name,
+                ClientEmail = request.ClientEmail,
                 PricePerNight = cachedProduct.Price,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
@@ -47,6 +48,7 @@ public class BookingHandler(IRepository repository, IRedisCacheService cache, IK
         {
             Id = product.Id,
             Name = product.Name,
+            ClientEmail = request.ClientEmail,
             PricePerNight = product.Price,
             StartDate = request.StartDate,
             EndDate = request.EndDate,

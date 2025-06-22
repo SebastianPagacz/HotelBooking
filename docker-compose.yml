@@ -1,18 +1,26 @@
 services:
   userservice:
     image: ${DOCKER_REGISTRY-}userservice
+    depends_on:
+     - sqlserverdb
     build:
       context: .
       dockerfile: UserService/Dockerfile
+
   hotelbooking:
     image: ${DOCKER_REGISTRY-}hotelbooking
+    depends_on:
+     - kafka
+     - sqlserverdb
     build:
       context: .
       dockerfile: HotelBooking/Dockerfile
+
   bookingservice:
     image: ${DOCKER_REGISTRY-}bookingservice
     depends_on:
      - kafka
+     - sqlserverdb
     build:
         context: .
         dockerfile: BookingService/Dockerfile
@@ -45,3 +53,12 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_NUM_PARTITIONS: 3   
       KAFKA_AUTO_CREATE_TOPIC_ENABLE: "true"
+
+  sqlserverdb:
+    container_name: sqldb
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports: 
+      - "8002:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=SebaMich@1

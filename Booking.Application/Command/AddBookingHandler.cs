@@ -31,6 +31,7 @@ public class AddBookingHandler(IRepository repository, IEmailService emailServic
         {
             ProductId = request.ProductId,
             ClientId = request.ClientId,
+            ClientEmail = request.ClientEmail,
             //PaymentId = request.PaymentId,
             StartDate = request.StartDate,
             EndDate = request.EndDate,
@@ -51,7 +52,7 @@ public class AddBookingHandler(IRepository repository, IEmailService emailServic
         };
 
         string mailMessage = $"You have a new booking with Id {newBooking.Id} that starts at {newBooking.StartDate}, ends at {newBooking.EndDate} and costs {newBooking.CaluclatedPrice}";
-        emailService.Send("s.pagacz123@gmail.com", "s.pagacz123@gmail.com", "new order", mailMessage);
+        emailService.Send(newBooking.ClientEmail, "s.pagacz123@gmail.com", "new order", mailMessage);
 
         return bookingDTO;
     }

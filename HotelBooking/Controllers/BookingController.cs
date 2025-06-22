@@ -11,11 +11,12 @@ namespace HotelBooking.Controllers;
 public class BookingController(IMediator mediator) : ControllerBase
 {
     [HttpPost("create-booking/{id}")]
-    public async Task<IActionResult> CreateBooking(int id, [FromBody] BookingDateRequest request)
+    public async Task<IActionResult> CreateBooking(int id, [FromBody] BookingRequest request)
     {
         var result = await mediator.Send(new BookingQuery
         {
             Id = id,
+            ClientEmail = request.ClientEmail,
             StartDate = request.StartDate,
             EndDate = request.EndDate
         });

@@ -55,6 +55,7 @@ public class KafkaConsumer : BackgroundService
                     {
                         ProductId = product.Id,
                         ClientId = 1,
+                        ClientEmail = product.ClientEmail,
                         PricePerNight = product.PricePerNight,
                         StartDate = product.StartDate,
                         EndDate = product.EndDate,

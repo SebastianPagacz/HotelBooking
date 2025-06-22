@@ -7,6 +7,7 @@ public class BookingModel
     public int Id { get; set; }
     public int ProductId { get; set; }
     public int ClientId { get; set; }
+    public string ClientEmail {  get; set; } = string.Empty;
     //public int PaymentId { get; set; }
     public DateOnly StartDate { get; set; }
     public DateOnly EndDate { get; set; }
